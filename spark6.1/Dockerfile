@@ -96,6 +96,9 @@ RUN apt-get update \
 # https://issues.apache.org/jira/browse/CASSANDRA-11661
 RUN sed -ri 's/^(JVM_PATCH_VERSION)=.*/\1=25/' /etc/cassandra/cassandra-env.sh
 
+# https://issues.apache.org/jira/browse/CASSANDRA-11574
+RUN rm /usr/lib/pyshared/python2.7/cqlshlib/copyutil.so
+
 ENV CASSANDRA_CONFIG /etc/cassandra
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
