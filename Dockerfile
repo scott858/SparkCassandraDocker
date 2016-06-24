@@ -8,7 +8,7 @@ RUN cd /home
 RUN apt-get update
 RUN apt-get install -y software-properties-common python-software-properties wget
 RUN apt-get install -y sudo
-RUN apt-get install -y vim
+RUN apt-get install -y vim net-tools
 
 # Install Java.
 RUN \
@@ -116,5 +116,7 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 # 9160: thrift service
 # 7077: spark master
 # 7080: spark ui
-EXPOSE 7000 7001 7077 7080 7199 9042 9160
+# 9998: spark streaming socket
+# 9999: spark streaming socket
+EXPOSE 7000 7001 7077 7080 7199 9042 9160 9998 9999
 CMD ["cassandra", "-f"]
