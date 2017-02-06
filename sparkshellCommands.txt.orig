@@ -1,0 +1,28 @@
+sudo docker run -d --name sparky -p 7000:7000 -p 7001:7001 -p 7199:7199 -p 9042:9042 -p 9160:9160 -p 7080:7080 -p 7077:7077 -p 9998:9998 -p 9999:9999 --network host --entrypoint=""
+
+sudo docker exec -ti sparky bash
+
+<<<<<<< HEAD
+=======
+/usr/local/share/spark/bin/spark-shell --master=spark://172.17.0.2:7077 --packages datastax:spark-cassandra-connector:1.6.0-M2-s_2.11 --conf spark.cassandra.connection.host=172.17.0.2
+
+>>>>>>> a425d80452c7950c295f36a5aa53c33eca76fa31
+# when running spark from container must use explicit ip (not localhost, 127.0.01, etc)
+/usr/local/spark/sbin/start-master.sh -h 172.17.0.2 -p 7077 --webui-port 7080
+/usr/local/spark/sbin/start-slave.sh 172.17.0.2:7077
+
+/usr/local/share/spark/bin/spark-shell --master=spark://172.17.0.2:7077 --packages datastax:spark-cassandra-connector:1.6.0-M2-s_2.11 --conf spark.cassandra.connection.host=172.17.0.2
+
+//configure a new sc
+import org.apache.spark.SparkContext
+import org.apache.spark.SparkContext._
+import org.apache.spark.SparkConf
+sc.stop
+val conf = new SparkConf(true).set("spark.cassandra.connection.host", "127.0.0.1")
+#val sc = new SparkContext("local[2]", "test", conf)
+val sc = new SparkContext("spark://172.17.0.2:7077", "killr_video", conf)
+
+//access to Cassandra
+import com.datastax.spark.connector._
+val rdd = sc.cassandraTable("killr_video", "videos")
+println(rdd.first)

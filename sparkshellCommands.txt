@@ -1,10 +1,11 @@
-sudo docker run -d --name sparky -p 127.0.0.1:7000:7000 -p 127.0.0.1:7001:7001 -p 127.0.0.1:7199:7199 -p 127.0.0.1:9042:9042 -p 127.0.0.1:9160:9160 -p 127.0.0.1:7080:7080 -p 127.0.0.1:7077:7077 -p 127.0.0.1:9998:9998 -p 127.0.0.1:9999:9999 7e5
+sudo docker run -d --name sparky -p 7000:7000 -p 7001:7001 -p 7199:7199 -p 9042:9042 -p 9160:9160 -p 7080:7080 -p 7077:7077 -p 9998:9998 -p 9999:9999 --network host --entrypoint=""
 
 sudo docker exec -ti sparky bash
 
+spark-shell --master=spark://172.17.0.2:7077 --packages datastax:spark-cassandra-connector:1.6.0-M2-s_2.11 --conf spark.cassandra.connection.host=172.17.0.2
 # when running spark from container must use explicit ip (not localhost, 127.0.01, etc)
-sudo /usr/local/share/spark/sbin/start-master.sh -h 172.17.0.2 -p 7077 --webui-port 7080
-sudo /usr/local/share/spark/sbin/start-slave.sh 172.17.0.2:7077
+/usr/local/spark/sbin/start-master.sh -h 172.17.0.2 -p 7077 --webui-port 7080
+/usr/local/spark/sbin/start-slave.sh 172.17.0.2:7077
 
 /usr/local/share/spark/bin/spark-shell --master=spark://172.17.0.2:7077 --packages datastax:spark-cassandra-connector:1.6.0-M2-s_2.11 --conf spark.cassandra.connection.host=172.17.0.2
 
